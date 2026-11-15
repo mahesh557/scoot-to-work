@@ -1,0 +1,819 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cyberabad Scoot-to-Work</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400..700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #F5F3EC;
+  --surface: #FFFFFF;
+  --panel: #E9E5DA;
+  --ink: #1B2622;
+  --body: #3D4A45;
+  --muted: #66746E;
+  --line: #D9D4C6;
+  --green: #1F7A50;
+  --green-soft: #DCEFE4;
+  --terra: #B5532B;
+  --terra-soft: #F6E3D9;
+  --hero: #14302A;
+  --hero-ink: #F5F3EC;
+  --hero-body: #C9DDD3;
+  --hero-accent: #3FB57E;
+  --img-bg: #FBFAF6;
+  --gutter: max(16px, env(safe-area-inset-left), env(safe-area-inset-right));
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0F1F1B; --surface: #162A25; --panel: #1E3832; --ink: #EEF2EE; --body: #C3D1CA;
+    --muted: #93A59D; --line: #2C4740; --green: #4CC38A; --green-soft: #1C3D30;
+    --terra: #E07F55; --terra-soft: #3B261C; --hero: #0B1815; --img-bg: #F2F0EA;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0F1F1B; --surface: #162A25; --panel: #1E3832; --ink: #EEF2EE; --body: #C3D1CA;
+  --muted: #93A59D; --line: #2C4740; --green: #4CC38A; --green-soft: #1C3D30;
+  --terra: #E07F55; --terra-soft: #3B261C; --hero: #0B1815; --img-bg: #F2F0EA;
+}
+* { box-sizing: border-box; }
+html { scroll-padding-top: 64px; }
+body { margin: 0; background: var(--bg); color: var(--body); font: 17px/1.6 'Inter', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+h1, h2, h3, h4 { font-family: 'Space Grotesk', system-ui, sans-serif; color: var(--ink); line-height: 1.15; margin: 0; text-wrap: balance; }
+h2 { font-size: clamp(28px, 4vw, 40px); font-weight: 700; }
+h3 { font-size: 21px; font-weight: 600; }
+h4 { font-size: 17px; font-weight: 600; }
+p { margin: 0; text-wrap: pretty; }
+a { color: var(--green); }
+img { display: block; max-width: 100%; height: auto; }
+.wrap { max-width: 1120px; margin: 0 auto; padding: 0 var(--gutter); }
+.eyebrow { font-family: 'Space Grotesk', sans-serif; font-size: 13px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--green); }
+
+/* hero */
+.hero { position: relative; background: var(--hero); color: var(--hero-ink); overflow: hidden; }
+.hero img.photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.hero .shade { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(20,48,42,.97) 0%, rgba(20,48,42,.88) 45%, rgba(20,48,42,.25) 100%); }
+.hero .inner { position: relative; padding-top: clamp(64px, 10vw, 128px); padding-bottom: clamp(48px, 7vw, 96px); }
+.hero .eyebrow { color: var(--hero-accent); }
+.hero h1 { color: var(--hero-ink); font-size: clamp(40px, 7vw, 80px); font-weight: 700; margin: 16px 0 20px; max-width: 12ch; line-height: 1.02; }
+.hero .lede { font-size: clamp(18px, 2.2vw, 23px); color: var(--hero-body); max-width: 40ch; }
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-top: 40px; max-width: 860px; }
+.kpi { background: rgba(245,243,236,.08); border: 1px solid rgba(245,243,236,.16); border-radius: 12px; padding: 14px 16px; }
+.kpi b { display: block; font: 700 28px/1.1 'Space Grotesk', sans-serif; color: var(--hero-ink); }
+.kpi span { font-size: 14px; color: var(--hero-body); }
+
+/* nav */
+nav.toc { position: sticky; top: 0; z-index: 10; background: color-mix(in srgb, var(--bg) 92%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+nav.toc .wrap { display: flex; gap: 4px; overflow-x: auto; scrollbar-width: none; padding-top: 8px; padding-bottom: 8px; }
+nav.toc .wrap::-webkit-scrollbar { display: none; }
+nav.toc a { flex: none; text-decoration: none; color: var(--body); font-size: 14px; font-weight: 500; padding: 6px 12px; border-radius: 999px; }
+nav.toc a:hover, nav.toc a.on { background: var(--green-soft); color: var(--green); }
+nav.toc a.docs { background: var(--hero); color: var(--hero-ink); }
+nav.toc a.docs:hover, nav.toc a.docs.on { background: var(--green); color: #fff; }
+@media (min-width: 900px) { nav.toc .wrap { flex-wrap: wrap; overflow-x: visible; row-gap: 4px; } }
+.byline { margin-top: 28px; font-size: 15px; color: var(--hero-body); }
+.byline b { color: var(--hero-ink); font-weight: 600; }
+.byline a { color: var(--hero-accent); }
+.doc-card a.open { font-weight: 600; }
+.doc-card .meta { font-size: 13px; color: var(--muted); }
+.group-title { margin: 8px 0 12px; font: 600 13px 'Space Grotesk', sans-serif; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+
+/* sections */
+section.part { padding: clamp(56px, 8vw, 96px) 0; border-bottom: 1px solid var(--line); }
+section.part:nth-of-type(even) { background: var(--surface); }
+.head { display: grid; gap: 12px; margin-bottom: 32px; max-width: 760px; }
+.head p.lead { font-size: 19px; }
+.sub { margin: 48px 0 16px; }
+.stack > * + * { margin-top: 16px; }
+.note { font-size: 15px; color: var(--muted); }
+
+/* grids & cards */
+.grid { display: grid; gap: 16px; }
+.g2 { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+.g3 { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+.g4 { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+.card { background: var(--panel); border-radius: 14px; padding: 22px; display: grid; gap: 8px; align-content: start; }
+section.part:nth-of-type(even) .card { background: var(--bg); }
+.card .num { font: 700 36px/1 'Space Grotesk', sans-serif; color: var(--green); }
+.card .num.t { color: var(--terra); }
+.card .n { font: 700 15px/1 'Space Grotesk', sans-serif; color: var(--terra); }
+.point { border-left: 4px solid var(--terra); padding-left: 16px; display: grid; gap: 4px; }
+ul.tidy { margin: 0; padding-left: 20px; display: grid; gap: 6px; }
+
+/* figures */
+figure { margin: 0; }
+figure img { border-radius: 12px; background: var(--img-bg); width: 100%; }
+figure.draw img { border: 1px solid var(--line); }
+figcaption { font-size: 14px; color: var(--muted); margin-top: 8px; }
+.ba { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+.tag { display: inline-block; font: 600 12px/1 'Space Grotesk', sans-serif; letter-spacing: .1em; text-transform: uppercase; padding: 5px 8px; border-radius: 6px; background: var(--panel); color: var(--ink); margin-bottom: 8px; }
+.tag.new { background: var(--green-soft); color: var(--green); }
+.split { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 32px; align-items: start; }
+
+/* tables */
+.tbl { overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
+section.part:nth-of-type(even) .tbl { background: var(--bg); }
+table { border-collapse: collapse; width: 100%; font-size: 15px; }
+th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font: 600 13px/1.3 'Space Grotesk', sans-serif; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); background: var(--panel); }
+tr:last-child td { border-bottom: 0; }
+td.r, th.r { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
+tr.total td { font-weight: 600; color: var(--ink); background: var(--green-soft); }
+.code { font: 600 13px 'Space Grotesk', sans-serif; padding: 2px 7px; border-radius: 5px; color: #fff; white-space: nowrap; }
+
+/* cost bar */
+.bar { display: flex; height: 44px; border-radius: 10px; overflow: hidden; margin: 8px 0 12px; }
+.bar div { display: flex; align-items: center; justify-content: center; color: #fff; font: 600 14px 'Space Grotesk', sans-serif; min-width: 0; }
+.legend { display: flex; flex-wrap: wrap; gap: 8px 18px; font-size: 14px; }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 6px; }
+
+/* phases */
+.phase { border-top: 6px solid var(--green); }
+.phase.now { border-top-color: var(--terra); }
+.phase .when { font: 600 15px 'Space Grotesk', sans-serif; color: var(--terra); }
+
+/* ask */
+.ask { background: var(--hero); color: var(--hero-ink); }
+section.part.ask { background: var(--hero); border-bottom: 0; }
+.ask h2, .ask h3 { color: var(--hero-ink); }
+.ask .eyebrow { color: var(--hero-accent); }
+.ask p { color: var(--hero-body); }
+.ask p b { color: var(--hero-ink); }
+.ask .card { background: rgba(245,243,236,.07); border: 1px solid rgba(245,243,236,.14); }
+.ask .card .num { color: var(--hero-accent); }
+.ask a { color: var(--hero-accent); }
+
+footer { padding: 32px 0 calc(32px + env(safe-area-inset-bottom)); font-size: 14px; color: var(--muted); }
+@media (max-width: 560px) { body { font-size: 16px; } .card { padding: 18px; } th, td { padding: 8px 10px; } }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <img class="photo" src="img/kothaguda-reimagined.jpg" alt="Gachibowli–Miyapur Road near Kothaguda reimagined with a walkway, a scooter lane and a planted kerb">
+  <div class="shade"></div>
+  <div class="wrap inner">
+    <p class="eyebrow">A proposal for HITEC City to the Financial District</p>
+    <h1>Cyberabad Scoot-to-Work</h1>
+    <p class="lede">Walk, scoot or auto to the bus. Ride the bus to work. A street and bus plan to move people to the IT corridor for work, built on one idea: spine, loops, tributaries and branches.</p>
+    <div class="kpis">
+      <div class="kpi"><b>7 routes</b><span>3 loops, 3 corridors, 1 feeder</span></div>
+      <div class="kpi"><b>73</b><span>electric buses, every 5–8 min</span></div>
+      <div class="kpi"><b>~110</b><span>stops, each with a scooter dock</span></div>
+      <div class="kpi"><b>₹50 / ₹100</b><span>per commute to office</span></div>
+      <div class="kpi"><b>~₹1,600 cr</b><span>whole programme, 5 years</span></div>
+    </div>
+    <p class="byline"><b>Uma Mahesh Padisetty</b> | <a href="mailto:uma.padisetty@hotmail.com">uma.padisetty@hotmail.com</a></p>
+  </div>
+</header>
+
+<nav class="toc" aria-label="Sections">
+  <div class="wrap">
+    <a href="#docs" data-target="docs" class="docs">Documents</a><a href="#problem" data-target="problem">Problem</a><a href="#theory" data-target="theory">Theory</a><a href="#idea" data-target="idea">Idea</a><a href="#network" data-target="network">Bus network</a><a href="#lane" data-target="lane">Bus lane</a><a href="#edge" data-target="edge">Street edge</a><a href="#home" data-target="home">Home to station</a><a href="#scooter" data-target="scooter">E-scooter</a><a href="#metrobus" data-target="metrobus">Metro bus</a><a href="#fare" data-target="fare">Fare</a><a href="#ops" data-target="ops">Operations</a><a href="#cost" data-target="cost">Costs</a><a href="#rollout" data-target="rollout">Rollout</a><a href="#risks" data-target="risks">Risks</a><a href="#ask" data-target="ask">The ask</a><a href="#refs" data-target="refs">References</a>
+  </div>
+</nav>
+
+<main>
+
+<section class="part" id="docs">
+  <div class="wrap">
+    <div class="head">
+      <p class="eyebrow">Documents</p>
+      <h2>Pitch decks and full documents</h2>
+      <p class="lead">Two pitch decks tell the story: the theory, then the plan. Six documents hold the detail, drawings and assumptions behind every number on this page.</p>
+    </div>
+    <p class="group-title">Pitch decks</p>
+    <div class="grid g2">
+      <div class="card doc-card"><h4>Theory: Spine, Loops and Tributaries</h4><p>Why the corridor jams and the traffic model behind the plan: the body analogy, KBR Park, Dubai, the Metro Node, autos on the branches.</p><p class="meta">12 slides</p><a class="open" href="docs/PitchDeck-Theory-Spine%2C%20Loops%20and%20Tributaries.pdf" target="_blank" rel="noopener">Open PDF</a></div>
+      <div class="card doc-card"><h4>Plan: Cyberabad Scoot-to-Work</h4><p>The bus network, street edge, home-to-station streets, e-scooter, Metro Bus, two fare options, costs, rollout and the ask.</p><p class="meta">26 slides</p><a class="open" href="docs/PitchDeck-Plan-Cyberabad-Scoot-to-Work.pdf" target="_blank" rel="noopener">Open PDF</a></div>
+    </div>
+    <p class="group-title" style="margin-top:28px">Documents</p>
+    <div class="grid g3">
+      <div class="card doc-card"><h4>0. Spine, Loops and Tributaries: Traffic Model for Cities</h4><p>The theory in full: layers, examples, targets for riders and auto drivers, what has to be true.</p><p class="meta">11 pages</p><a class="open" href="docs/0-Spine%2C%20Loops%20and%20Tributaries%20Traffic%20Model%20for%20Cities.pdf" target="_blank" rel="noopener">Open PDF</a></div>
+      <div class="card doc-card"><h4>1. Cyberabad Bus Loops: Final Plan</h4><p>Routes, stations, fleet, phasing, bus-lane enforcement, narrow roads, the e-scooter.</p><p class="meta">13 pages</p><a class="open" href="docs/1-Cyberabad%20Bus%20Loops%20Plan.pdf" target="_blank" rel="noopener">Open PDF</a></div>
+      <div class="card doc-card"><h4>2. Walk and Scoot Sidewalks: Design Guide</h4><p>The street edge, five rules, Tokyo and Dubai lessons, Kothaguda example.</p><p class="meta">13 pages</p><a class="open" href="docs/2-Walk%20and%20Scoot%20Sidewalks%20Design%20Guide.pdf" target="_blank" rel="noopener">Open PDF</a></div>
+      <div class="card doc-card"><h4>3. Home to Station: Residential Street Design Guide</h4><p>Street types, speeds, the 3–5 km catchment, Mayuri Nagar example.</p><p class="meta">9 pages</p><a class="open" href="docs/3-Home%20to%20Station%20Residential%20Street%20Design%20Guide.pdf" target="_blank" rel="noopener">Open PDF</a></div>
+      <div class="card doc-card"><h4>4. Bus Operations: Costing and Fare Proposal</h4><p>Operating model, cost per km, and both fare options (₹10–20 and ₹15–30) with break-even.</p><p class="meta">11 pages</p><a class="open" href="docs/4-Bus%20Operations%20Costing%20and%20Fare%20Proposal.pdf" target="_blank" rel="noopener">Open PDF</a></div>
+      <div class="card doc-card"><h4>5. Road Upgrade: Cost and Technical Specifications</h4><p>Unit rates, specs to IRC codes, cost per km, phase costs.</p><p class="meta">11 pages</p><a class="open" href="docs/5-Road%20Upgrade%20Cost%20and%20Technical%20Specifications.pdf" target="_blank" rel="noopener">Open PDF</a></div>
+    </div>
+    <p class="note" style="margin-top:20px">All figures are planning approximations at 2026 prices, to be confirmed by a road-width survey, a ridership survey and operator tenders.</p>
+  </div>
+</section>
+
+<section class="part" id="problem">
+  <div class="wrap">
+    <div class="head">
+      <p class="eyebrow">The problem</p>
+      <h2>Today the street works for no one</h2>
+      <p class="lead">Gachibowli and the Financial District have no rail at all; the metro's Blue Line ends at Raidurg. Hundreds of thousands of IT workers drive or ride two-wheelers on roads built only for cars.</p>
+    </div>
+    <div class="split">
+      <figure>
+        <img src="img/kothaguda-today.jpg" alt="Gachibowli–Miyapur Road near Kothaguda today: no footpath, kerbside parking, three general lanes" loading="lazy">
+        <figcaption>Gachibowli–Miyapur Road near Kothaguda, April 2026.</figcaption>
+      </figure>
+      <div class="stack">
+        <div class="point"><h3>No footpath</h3><p>People walk in the traffic lane, between parked cars and moving autos.</p></div>
+        <div class="point"><h3>The kerb is a car park</h3><p>Cars, autos and two-wheelers fill the edge of the road.</p></div>
+        <div class="point"><h3>No room for buses or scooters</h3><p>Three general lanes each way and nothing else. A short trip to the office is not walkable and not safe on two wheels.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="part" id="theory">
+  <div class="wrap">
+    <div class="head">
+      <p class="eyebrow">The theory: a traffic model for cities</p>
+      <h2>Spine, loops, tributaries and branches</h2>
+      <p class="lead"><strong>Chaos is not too many vehicles. It is every vehicle going in every direction.</strong> Order comes from a hierarchy: a spine, loops, tributaries and branches, each doing only its own job and meeting the next only at fixed points.</p>
+    </div>
+    <figure class="draw"><img src="img/theory-chaos.svg" alt="The same homes and offices connected two ways: a tangle of individual trips, and an ordered network of spine, loop, tributaries and last-mile paths" loading="lazy"></figure>
+
+    <h3 class="sub">The principle: how the body moves blood</h3>
+    <div class="split">
+      <figure class="draw"><img src="img/theory-model.svg" alt="Model diagram: a metro spine with two loops around office hubs, tributaries branching off, and last-mile paths to homes" loading="lazy"></figure>
+      <div class="stack">
+        <div class="point"><h4>Arterial spine</h4><p>The aorta carries the largest flow. In the city: the metro line.</p></div>
+        <div class="point"><h4>Circulation loops</h4><p>Blood keeps moving in loops. In the city: Metro Loops of median buses round each office hub.</p></div>
+        <div class="point"><h4>Tributaries</h4><p>Arteries branch off to each region. In the city: Metro Corridors joining a loop at a Metro Node.</p></div>
+        <div class="point"><h4>Branches</h4><p>Fine capillary branches reach every cell. In the city: walking, standing e-scooters and registered autos from home to the nearest Metro Node.</p></div>
+        <p class="note">Two rules make it work: the big vessels never serve a cell directly, and layers meet only at fixed junctions.</p>
+      </div>
+    </div>
+
+    <h3 class="sub">KBR Park: a loop with tributaries in Hyderabad today</h3>
+    <div class="split">
+      <figure class="draw"><img src="img/theory-kbr.svg" alt="Map of KBR Park in Jubilee Hills: a ring of roads about 5 km round the park, with about eight main roads joining at fixed junctions and the Jubilee Hills Check Post metro station at the north-west corner" loading="lazy"><figcaption>Road data from OpenStreetMap.</figcaption></figure>
+      <div class="stack">
+        <p>Road No. 2, Road No. 10, Road No. 92 and Road No. 1 ring KBR Park in a loop of about 5 km. About eight main roads join it at fixed junctions, so trips go round the park, not through it, and the metro spine touches the loop at Jubilee Hills Check Post.</p>
+        <p class="note">The lesson is the shape. KBR still jams at peak because every vehicle shares it; Cyberabad's Metro Loops give the median lane to buses only.</p>
+      </div>
+    </div>
+
+    <h3 class="sub">Dubai: a city built along one spine</h3>
+    <figure class="draw"><img src="img/theory-dubai.svg" alt="Schematic of Dubai's Red Line along Sheikh Zayed Road with 15 stations in about 26 km, the Dubai Tram loop joining at two stations, a loop round Downtown, and feeder buses" loading="lazy"><figcaption>Station positions from OpenStreetMap. Schematic.</figcaption></figure>
+    <div class="grid g4" style="margin-top:16px">
+      <div class="card"><h4>The spine</h4><p>Red Line on Sheikh Zayed Road: 15 stations in about 26 km, one every 1.9 km.</p></div>
+      <div class="card"><h4>A tram loop</h4><p>Through Dubai Marina and JBR, joined to the metro at DMCC and Sobha Realty.</p></div>
+      <div class="card"><h4>A Downtown loop</h4><p>A boulevard round Burj Khalifa, with a covered walkway to the station.</p></div>
+      <div class="card"><h4>Feeders and bridges</h4><p>Buses from stations into neighbourhoods; footbridges so nobody crosses the road on foot.</p></div>
+    </div>
+
+    <h3 class="sub">The model in Cyberabad</h3>
+    <div class="split">
+      <figure class="draw"><img src="img/theory-cyber.svg" alt="Cyberabad network coloured by layer: metro Red and Blue Lines as the spine, loops L1, L2 and L3, tributaries C1, C2, C3 and the West feeder, and a 3–5 km last-mile circle around a node" loading="lazy"></figure>
+      <div class="tbl"><table>
+        <thead><tr><th>Layer</th><th>Body</th><th>Cyberabad</th></tr></thead>
+        <tbody>
+          <tr><td>Spine</td><td>Aorta</td><td>Metro Red Line and Blue Line</td></tr>
+          <tr><td>Loop</td><td>Circulation loop</td><td>Metro Loops L1, L2, L3 round each office hub</td></tr>
+          <tr><td>Tributary</td><td>Artery</td><td>Metro Corridors C1, C2, C3 and the West feeder</td></tr>
+          <tr><td>Node</td><td>Junction</td><td>About 110 Metro Nodes, each with a scooter dock and auto stand</td></tr>
+          <tr><td>Branch</td><td>Capillaries</td><td>Last mile by walk, e-scooter or registered auto, within 3–5 km; dedicated auto parking at every node and neighbourhood</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+
+    <h3 class="sub">The Metro Node: the only place where layers meet</h3>
+    <div class="grid g4">
+      <div class="card"><h4>Bus platform</h4><p>In the median, for the Metro Loop or Corridor; a bus every 5–8 minutes.</p></div>
+      <div class="card"><h4>Metro link</h4><p>Where a loop meets the spine, a short covered walk to the metro station.</p></div>
+      <div class="card"><h4>Scooter dock</h4><p>Beside the crossing to the platform, on the walk-and-scoot edge.</p></div>
+      <div class="card"><h4>Auto parking</h4><p>Dedicated spaces for registered autos, never on the walkway or scooter lane.</p></div>
+    </div>
+
+    <h3 class="sub">Target state: everyone is served, sustainably</h3>
+    <div class="grid g3">
+      <div class="card"><div class="num">35–55 min</div><h4>Door to door</h4><p>Walk, scoot or auto to a node; a bus every 5–8 minutes; one change at most.</p></div>
+      <div class="card"><div class="num">₹1,700–2,000</div><h4>A rider's month</h4><p>Bus pass plus own scooter or a shared auto at about ₹25 a seat. With the metro too, a joint pass keeps it under ₹3,000.</p></div>
+      <div class="card"><div class="num t">₹1,000+</div><h4>An auto driver's day</h4><p>20 private rides at ₹50–100, or 14 shared runs at ₹25 a seat, from a stand at the node.</p></div>
+    </div>
+    <div class="grid g2" style="margin-top:16px">
+      <div class="stack">
+        <h3>Autos serve the branches, not the arteries</h3>
+        <ul class="tidy">
+          <li>Dedicated stands at every node, never on the walkway or scooter lane</li>
+          <li>Every auto registered to a zone and tracked by GPS</li>
+          <li>No stopping or plying along Metro Loop and Corridor roads, phased in with drivers' unions</li>
+          <li>The metro gets a consistent, controlled flow of people</li>
+        </ul>
+      </div>
+      <div class="stack">
+        <h3>Key benefits</h3>
+        <ul class="tidy">
+          <li>Serves working people and auto drivers sustainably</li>
+          <li>Reliable, comfortable transport</li>
+          <li>Cleaner air: no dust pollution, no noise pollution</li>
+          <li>Healthier people who walk and scoot every day</li>
+          <li>Less chaos: smooth, controlled movement</li>
+        </ul>
+      </div>
+    </div>
+    <p class="note" style="margin-top:12px">A private auto every day (₹50–100 a trip) would cost ₹2,200–4,400 a month on its own, so the everyday last mile is walking, a scooter or a shared auto. All figures approximate.</p>
+  </div>
+</section>
+
+<section class="part" id="idea">
+  <div class="wrap">
+    <div class="head">
+      <p class="eyebrow">The idea</p>
+      <h2>Walk, scoot or auto to the bus. Ride the bus to work.</h2>
+      <p class="lead">Four parts that only work together. The bus carries the long part of the trip; the scooter and the walkway cover the first and last kilometre; residential streets make the trip from the gate safe; and a simple fare makes changing buses painless.</p>
+    </div>
+    <div class="grid g4">
+      <div class="card"><span class="n">01</span><h3>Bus in the median</h3><p>Three one-way loops and three two-way corridors, a bus every 5–8 minutes at peak.</p></div>
+      <div class="card"><span class="n">02</span><h3>Walk-and-scoot edge</h3><p>A 1.5 m walkway, 2.0 m scooter lane and planted kerb on every bus road.</p></div>
+      <div class="card"><span class="n">03</span><h3>Home-to-station streets</h3><p>Slow, safe residential streets within 3–5 km of every station.</p></div>
+      <div class="card"><span class="n">04</span><h3>One simple fare</h3><p>₹10–20 on the bus, ₹50–100 by auto; one tap with the metro card.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="part" id="network">
+  <div class="wrap">
+    <div class="head">
+      <p class="eyebrow">The bus network</p>
+      <h2>Seven routes, each checked on the map</h2>
+      <p class="lead">Every route was checked on OpenStreetMap. Where there is a separate road back, buses run one way round a loop and need only one median lane. Where there is only one main road, as from Miyapur, KPHB and Chandanagar, buses run both ways on a corridor. Loops that share a road run the same way along it, like meshed gears.</p>
+    </div>
+    <figure class="draw">
+      <img src="img/network-map.png" alt="Map of the seven bus routes: loops L1, L2 and L3 in the south, corridors C1, C2 and C3 to the north and west, and the West feeder" loading="lazy">
+      <figcaption>The network: loops L1, L2, L3; corridors C1, C2, C3; West feeder W.</figcaption>
+    </figure>
+
+    <h3 class="sub">Routes and fleet</h3>
+    <div class="tbl"><table>
+      <thead><tr><th>Route</th><th>Type</th><th>Serves</th><th class="r">Length</th><th class="r">Buses</th><th>Phase</th></tr></thead>
+      <tbody>
+        <tr><td><span class="code" style="background:#1F7A50">L1</span> Core</td><td>One-way loop, anticlockwise</td><td>HITEC City, Madhapur, Kondapur, Kothaguda</td><td class="r">10.4 km</td><td class="r">9</td><td>1</td></tr>
+        <tr><td><span class="code" style="background:#B5532B">L2</span> Financial District</td><td>One-way loop, clockwise</td><td>Gachibowli, Raidurg, Khajaguda, Financial District</td><td class="r">13.5 km</td><td class="r">11</td><td>1</td></tr>
+        <tr><td><span class="code" style="background:#5E7D6F">L3</span> South-east</td><td>One-way loop, anticlockwise</td><td>Manikonda, Shaikpet</td><td class="r">15.0 km</td><td class="r">8</td><td>2</td></tr>
+        <tr><td><span class="code" style="background:#2E6DA4">C1</span> Miyapur</td><td>Two-way corridor</td><td>Miyapur, Hafeezpet to the loops</td><td class="r">7.9 km</td><td class="r">11</td><td>2</td></tr>
+        <tr><td><span class="code" style="background:#7B5EA7">C2</span> KPHB</td><td>Two-way corridor</td><td>KPHB to the loops</td><td class="r">6.2 km</td><td class="r">9</td><td>2</td></tr>
+        <tr><td><span class="code" style="background:#A3792C">C3</span> West</td><td>Two-way corridor</td><td>Chandanagar MMTS, Lingampally, past HCU on Old Bombay Road, Gachibowli, ISB Road, Wipro Circle</td><td class="r">12.1 km</td><td class="r">12</td><td>2</td></tr>
+        <tr><td><span class="code" style="background:#66746E">W</span> West feeder</td><td>In traffic, signal priority</td><td>West of the loops, in mixed traffic</td><td class="r">13.8 km</td><td class="r">13</td><td>3</td></tr>
+        <tr class="total"><td colspan="3">Network</td><td class="r">~79 km</td><td class="r">73</td><td></td></tr>
+      </tbody>
+    </table></div>
+
+    <h3 class="sub">Why loops: one lane fits an 80-ft road</h3>
+    <div class="split">
+      <figure class="draw">
+        <img src="img/cross-section.png" alt="Cross-section of a loop road: walkway, scooter lane, planted kerb and car lanes on each side, with a single 4 m median bus lane and platform" loading="lazy">
+        <figcaption>A loop road in 24 m (about 80 ft).</figcaption>
+      </figure>
+      <div class="stack">
+        <p>A normal median busway needs a lane each way plus a central platform, about 7.6 to 10.6 m, and buses with right-side doors.</p>
+        <p>Because each loop road only ever carries buses one way, <strong>one 4 m lane is enough</strong> and the platform always sits on the bus's left. Standard buses with left-side doors serve every platform.</p>
+        <p>The whole street, with walkways and scooter lanes on both sides, fits in 24 m. Corridors, which carry buses both ways, need about 90 ft.</p>
+        <p class="note">About 110 stops in all, ~90 of them median stations with open platforms, shade roofs and arrival screens, each next to a scooter dock.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="part" id="lane">
+  <div class="wrap">
+    <div class="head">
+      <p class="eyebrow">Risk and response</p>
+      <h2>Keep cars out of the bus lane, and plan for narrow roads</h2>
+      <p class="lead">Delhi's BRT was removed in 2016 partly because cars took over its lanes and enforcement was weak. Physical barriers and automatic fines from day one avoid that.</p>
+    </div>
+    <div class="grid g2">
+      <div class="card"><h3>Car-trap pits at every entry</h3>
+        <ul class="tidy">
+          <li>Pit wider than a car's track, narrower than a bus's: buses roll over, car wheels drop in</li>
+          <li>Only at low-speed entry points and stations, never along the lane</li>
+          <li>Bollards keep two-wheelers and autos out; red surface and signs before every pit</li>
+          <li>About ₹10–15 lakh each; ~100 pits, ₹10–15 crore. Road-safety audit before use</li>
+        </ul></div>
+      <div class="card"><h3>AI cameras, automatic fines</h3>
+        <ul class="tidy">
+          <li>Number-plate cameras every 300–500 m, plus a forward camera on every bus (~₹50,000 each)</li>
+          <li>AI spots any vehicle in the lane, day and night</li>
+          <li>E-challan through Cyberabad Traffic Police; fines rise with each repeat</li>
+          <li>Tow truck called automatically for any stopped vehicle</li>
+        </ul></div>
+    </div>
+    <p class="note" style="margin-top:12px">The lane is bus-only all day; ambulances and fire engines may use it.</p>
+
+    <h3 class="sub">Where the road is narrower, cars give way first</h3>
+    <div class="tbl"><table>
+      <thead><tr><th>Road width</th><th>Bus</th><th>Scooters</th><th>Walkway</th><th>Cars</th></tr></thead>
+      <tbody>
+        <tr><td>90 ft and over</td><td>Two-way median lanes</td><td>2.0 m kerbed lane</td><td>1.5–2.0 m</td><td>Two lanes each way</td></tr>
+        <tr><td>80–90 ft</td><td>One-way median lane on loops; two-way on corridors</td><td>2.0 m kerbed lane</td><td>1.5 m</td><td>Two each way on loops, one on corridors</td></tr>
+        <tr><td>60–80 ft</td><td>Kerbside bus lane in the peak direction</td><td>1.5 m painted lane, Tokyo style</td><td>1.5 m</td><td>One lane each way</td></tr>
+        <tr><td>Pinch points under 60 ft</td><td>Shared lane with a bus-first signal</td><td>Shared at 20 km/h, pictograms</td><td>1.5 m</td><td>One lane, or a one-way pair</td></tr>
+      </tbody>
+    </table></div>
+    <div class="grid g3" style="margin-top:16px">
+      <div class="point"><h4>The walkway is never cut</h4><p>It keeps at least 1.5 m on every stretch.</p></div>
+      <div class="point"><h4>A car lane goes first</h4><p>Before the bus lane or scooter lane is narrowed. Under metro pillars, the bus runs between pillars or at the kerb.</p></div>
+      <div class="point"><h4>Land purchase is the last resort</h4><p>Every stretch is measured in 2027 before design.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="part" id="edge">
+  <div class="wrap">
+    <div class="head">
+      <p class="eyebrow">The street edge</p>
+      <h2>Every bus road gets a walk-and-scoot edge</h2>
+      <p class="lead">Each side: 1.5 m walkway, 2.0 m scooter lane, 0.5 m planted kerb, then two 3 m car lanes, 10 m in all. Because buses stop in the median, the kerb never has bus bays or waiting crowds, which is what makes a continuous scooter lane possible.</p>
+    </div>
+    <figure class="draw">
+      <img src="img/street-edge.png" alt="Plan drawing of the street edge: walkway, scooter lane, planted kerb, dock beside the crossing to a median station" loading="lazy">
+      <figcaption>The edge in plan: walkway, scooter lane, planted kerb, and a dock at each crossing.</figcaption>
+    </figure>
+
+    <h3 class="sub">Five rules</h3>
+    <div class="grid g3">
+      <div class="card"><span class="n">1</span><h4>No gaps</h4><p>Walkway and lane cross gates and side streets at their own level.</p></div>
+      <div class="card"><span class="n">2</span><h4>Nothing in the walkway</h4><p>Poles, stalls and signboards go in the planted kerb.</p></div>
+      <div class="card"><span class="n">3</span><h4>No stopping on the edge</h4><p>A coloured kerb line, as in Tokyo.</p></div>
+      <div class="card"><span class="n">4</span><h4>A dock at every crossing</h4><p>Beside each crossing to a median station.</p></div>
+      <div class="card"><span class="n">5</span><h4>Fenced corners</h4><p>Set-back crossings, as in Tokyo and Dubai.</p></div>
+    </div>
+
+    <h3 class="sub">What we borrow from Tokyo and Dubai</h3>
+    <div class="grid g3">
+      <figure><img src="img/tokyo-1.jpg" alt="Tokyo street with a separated walkway and painted cycle lane" loading="lazy"><figcaption>Tokyo: painted lanes and kerb lines on narrow streets.</figcaption></figure>
+      <figure><img src="img/tokyo-2.jpg" alt="Tokyo crossing with fenced corner and set-back crossing" loading="lazy"><figcaption>Tokyo: fenced corners and orderly crossings.</figcaption></figure>
+      <figure><img src="img/dubai.jpg" alt="Dubai street with shaded walkway and separated cycle and scooter track" loading="lazy"><figcaption>Dubai: separated scooter tracks and shade in the heat.</figcaption></figure>
+    </div>
+
+    <h3 class="sub">Build it in three steps</h3>
+    <div class="tbl"><table>
+      <thead><tr><th>Step</th><th>What</th><th>Time</th><th class="r">₹ crore per km</th></tr></thead>
+      <tbody>
+        <tr><td>Quick kit</td><td>Paint, planters, bollards, temporary kerbs</td><td>Weeks</td><td class="r">small; ₹30 cr for all of Phase 1</td></tr>
+        <tr><td>Standard edge</td><td>Kerbed walkway and scooter lane, docks, lighting</td><td>Months</td><td class="r">9–12</td></tr>
+        <tr><td>Full rebuild</td><td>Plus covered drains, duct bank, cables underground, shade</td><td>With road works</td><td class="r">16–22</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3 class="sub">Worked example: Gachibowli–Miyapur Road near Kothaguda</h3>
+    <div class="ba">
+      <figure><span class="tag">Today</span><img src="img/kothaguda-today.jpg" alt="Kothaguda road today" loading="lazy"></figure>
+      <figure><span class="tag new">Reimagined</span><img src="img/kothaguda-reimagined.jpg" alt="Kothaguda road reimagined with walkway, scooter lane, planted kerb and median bus lane" loading="lazy"></figure>
+    </div>
+  </div>
+</section>
+
+<section class="part" id="home">
+  <div class="wrap">
+    <div class="head">
+      <p class="eyebrow">The first mile</p>
+      <h2>Home to station</h2>
+      <p class="lead">Most trips start on a residential street, not a bus road. If the first 500 metres from the gate is unsafe, dark or blocked, people take the car. Every home within 3–5 km of a station, about 10–15 minutes by scooter or auto, gets one signed access route.</p>
+    </div>
+    <div class="split">
+      <figure class="draw"><img src="img/home-trip.png" alt="Diagram of a trip from a home gate along residential streets to a median bus station" loading="lazy"><figcaption>The trip from the gate to the station.</figcaption></figure>
+      <figure class="draw"><img src="img/home-sections.png" alt="Cross-sections of three residential street types: lane, colony road and collector road" loading="lazy"><figcaption>Three street types and their layouts.</figcaption></figure>
+    </div>
+    <div class="grid g3" style="margin-top:24px">
+      <div class="card"><div class="num">15</div><h4>km/h on lanes</h4><p>Shared, narrow streets in front of homes.</p></div>
+      <div class="card"><div class="num">20</div><h4>km/h on colony roads</h4><p>Walking strips, speed tables, lighting.</p></div>
+      <div class="card"><div class="num">30</div><h4>km/h on collector roads</h4><p>With a separate scooter track.</p></div>
+    </div>
+    <div class="grid g2" style="margin-top:24px">
+      <div class="stack">
+        <h3>What the fix includes</h3>
+        <ul class="tidy">
+          <li>Walking strips, speed tables at junctions, lighting every 25–30 m</li>
+          <li>Clearing encroachments and parked vehicles from the route</li>
+          <li>Signage to the nearest station and dock</li>
+          <li>Resident welfare associations choose the route and open side gates towards stations</li>
+        </ul>
+      </div>
+      <div class="stack">
+        <h3>Cost</h3>
+        <div class="tbl"><table>
+          <tbody>
+            <tr><td>Quick kit</td><td class="r">₹0.7–1.2 cr/km</td></tr>
+            <tr><td>Full upgrade</td><td class="r">₹3–5 cr/km</td></tr>
+            <tr class="total"><td>About 60 km of routes</td><td class="r">₹130–220 cr</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+    </div>
+
+    <h3 class="sub">Worked example: Mayuri Nagar Main Road</h3>
+    <div class="ba">
+      <figure><span class="tag">Today</span><img src="img/mayuri-today.jpg" alt="Mayuri Nagar Main Road today" loading="lazy"></figure>
+      <figure><span class="tag new">Reimagined</span><img src="img/mayuri-reimagined.jpg" alt="Mayuri Nagar Main Road reimagined with walkways, trees and calmer traffic" loading="lazy"></figure>
+    </div>
+    <p class="note" style="margin-top:8px">The reimagined image shows the walkway and street trees; the final design also adds a scooter track and a 30 km/h limit.</p>
+  </div>
+</section>
+
+<section class="part" id="scooter">
+  <div class="wrap">
+    <div class="head">
+      <p class="eyebrow">The standing e-scooter</p>
+      <h2>A light, slow scooter for the last 3–5 km</h2>
+    </div>
+    <div class="split">
+      <figure>
+        <img src="img/max-x1.jpg" alt="Max X1 foldable standing e-scooter for adults" loading="lazy" style="object-fit:contain">
+        <figcaption>Example: Max X1 foldable e-scooter, about ₹26,000 — less than a year of two-wheeler fuel and parking.</figcaption>
+      </figure>
+      <div class="stack">
+        <div class="point"><h3>The vehicle</h3><p>Standing e-scooter, top speed 25 km/h, slowed to 10 km/h near stations by GPS; lights, bell and indicators.</p></div>
+        <div class="point"><h3>Where it rides</h3><p>Scooter lanes and slow residential streets, never walkways or bus-road car lanes; parked only in docks.</p></div>
+        <div class="point"><h3>How people get one</h3><p>Shared fleets from 2–3 licensed operators, or buy your own.</p></div>
+        <div class="point"><h3>What the state must do</h3><p>Notify a legal e-scooter category (standing scooters are not clearly covered today), license operators with fleet caps, riders 16 and over with helmets.</p></div>
+      </div>
+    </div>
+    <div class="tbl" style="margin-top:24px"><table>
+      <thead><tr><th>Shared fleet</th><th class="r">Scooters</th><th class="r">At ~₹26,000 each</th></tr></thead>
+      <tbody>
+        <tr><td>Phase 1</td><td class="r">1,500</td><td class="r">~₹4 cr</td></tr>
+        <tr><td>Phase 2</td><td class="r">4,000</td><td class="r">~₹10 cr</td></tr>
+        <tr><td>Full network</td><td class="r">8,000–10,000</td><td class="r">~₹21–26 cr</td></tr>
+      </tbody>
+    </table></div>
+    <p class="note" style="margin-top:8px">Operators buy and run fleets; shared-fleet models are usually sturdier and cost more. Operators get a GHMC permit with fleet caps, a two-hour limit to clear misparked scooters, insurance per ride and anonymised trip data shared with the city. Combined bus-and-scooter monthly pass: [₹__], to be agreed.</p>
+  </div>
+</section>
+
+<section class="part" id="metrobus">
+  <div class="wrap">
+    <div class="head">
+      <p class="eyebrow">The Metro Bus</p>
+      <h2>Board like Dubai: tap in, no conductor</h2>
+      <p class="lead">In Dubai, one nol card works on metro, bus and tram, with a reader by every bus door and no conductor on board. Cyberabad’s Metro Bus works the same way.</p>
+    </div>
+    <div class="split">
+      <figure>
+        <img src="img/dubai-bus-nol-card.jpg" alt="Inside a Dubai bus: a rider taps a nol card on the red reader by the door, beside a notice that a journey needs a minimum balance of AED 7.5" loading="lazy">
+        <figcaption>Dubai: tap the nol card at the reader by the door. A trip needs a minimum balance of AED 7.5.</figcaption>
+      </figure>
+      <div class="stack">
+        <div class="point"><h4>One card, one tap</h4><p>Metro card at a reader by every door. No cash, no tickets, no conductor.</p></div>
+        <div class="point"><h4>₹10 a bus, ₹20 a journey</h4><p>Any buses within 60 minutes; ₹40 daily cap, ₹900 monthly pass, same fare for all.</p></div>
+        <div class="point"><h4>Minimum balance to board</h4><p>As in Dubai, a card needs [₹20] to start a trip, so nobody rides on an empty card.</p></div>
+        <div class="point"><h4>Clean, calm, watched</h4><p>Electric and air-conditioned, CCTV on board, no eating or smoking, live arrival screens.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="part" id="fare">
+  <div class="wrap">
+    <div class="head">
+      <p class="eyebrow">The fare</p>
+      <h2>One tap, one simple fare</h2>
+      <p class="lead">Same fare for every rider. Pay with the Hyderabad Metro card, a RuPay NCMC card or an app QR ticket; no cash on buses, no conductors.</p>
+    </div>
+    <div class="grid g4">
+      <div class="card"><div class="num">₹10</div><h4>Each bus you board</h4><p>Tap the validator by the door. No tap-out.</p></div>
+      <div class="card"><div class="num">₹20</div><h4>Most for one journey</h4><p>Any number of buses within 60 minutes.</p></div>
+      <div class="card"><div class="num">₹40</div><h4>Daily cap</h4><p>The rest of the day rides free.</p></div>
+      <div class="card"><div class="num">₹900</div><h4>Monthly pass</h4><p>Unlimited rides, less than running a two-wheeler.</p></div>
+    </div>
+    <div class="grid g2" style="margin-top:24px">
+      <div class="stack">
+        <h3>Why per bus, not per km</h3>
+        <p>Buses are an open system: people get off onto open platforms and footpaths, not through gates as in the metro. Distance fares would need everyone to tap out inside the bus every time, and missed tap-outs mean overcharges and disputes. One tap when boarding, with a ₹20 journey cap, keeps transfers cheap, which the loop-and-corridor network depends on.</p>
+      </div>
+      <div class="stack">
+        <h3>Checks and fallback</h3>
+        <p>Roving inspectors with handheld readers; ₹500 penalty for riding without a tap. If long single-bus rides on C1 and C3 turn out to be common, a ₹15 corridor boarding fare is the fallback, decided on six months of tap data.</p>
+      </div>
+    </div>
+
+    <h3 class="sub">Two fare options evaluated</h3>
+    <div class="tbl"><table>
+      <thead><tr><th></th><th class="r">₹10–20 a bus ride</th><th class="r">₹15–30 a bus ride</th></tr></thead>
+      <tbody>
+        <tr><td>Each bus you board / most per journey</td><td class="r">₹10 / ₹20</td><td class="r">₹15 / ₹30</td></tr>
+        <tr><td>Daily cap / monthly pass</td><td class="r">₹40 / ₹900</td><td class="r">₹60 / ₹1,350</td></tr>
+        <tr><td>Average fare per journey</td><td class="r">₹13</td><td class="r">₹19.50</td></tr>
+        <tr><td>Break-even, paid journeys per bus a day</td><td class="r">about 850</td><td class="r">about 570</td></tr>
+        <tr><td>Commuter's bus fares a month</td><td class="r">₹440–880</td><td class="r">₹660–1,320</td></tr>
+        <tr><td>Riders, for the same demand</td><td class="r">baseline</td><td class="r">15–20% fewer</td></tr>
+      </tbody>
+    </table></div>
+    <p class="note" style="margin-top:8px">₹10–20 keeps a worker’s month under ₹3,000 but needs the city to fund a slow first year; ₹15–30 pays for itself sooner but costs riders more and carries fewer of them. A middle path: open at ₹10–20 and move corridor boardings to ₹15 if six months of tap data show the deficit is not closing.</p>
+  </div>
+</section>
+
+<section class="part" id="ops">
+  <div class="wrap">
+    <div class="head">
+      <p class="eyebrow">Operations</p>
+      <h2>About ₹66.5 per bus-km; break-even at 850 or 570 journeys per bus a day</h2>
+      <p class="lead">Electric buses run by private operators under a gross-cost contract, paid ₹59 per km. The city adds about ₹7.5 per km for the fare system, inspectors, control room and station upkeep. Driver-only buses.</p>
+    </div>
+    <div class="bar" role="img" aria-label="Cost per bus-km: bus and battery ₹23, drivers ₹13, electricity ₹10, upkeep ₹5, operator overhead ₹8, city costs ₹7.5">
+      <div style="flex:23;background:#14302A">₹23</div><div style="flex:13;background:#1F7A50">₹13</div><div style="flex:10;background:#2E8F66">₹10</div><div style="flex:5;background:#5E7D6F">₹5</div><div style="flex:8;background:#7A8F86">₹8</div><div style="flex:7.5;background:#B5532B">₹7.5</div>
+    </div>
+    <div class="legend">
+      <span><i style="background:#14302A"></i>Bus and battery, 12-yr finance</span><span><i style="background:#1F7A50"></i>Drivers</span><span><i style="background:#2E8F66"></i>Electricity</span><span><i style="background:#5E7D6F"></i>Upkeep</span><span><i style="background:#7A8F86"></i>Operator overhead</span><span><i style="background:#B5532B"></i>City's costs</span>
+    </div>
+    <div class="grid g3" style="margin-top:24px">
+      <div class="card"><div class="num">66</div><p>of 73 buses in service each day</p></div>
+      <div class="card"><div class="num">12,500</div><p>bus-km a day, about 190 km per bus</p></div>
+      <div class="card"><div class="num">₹30 cr</div><p>a year to run, about ₹8.3 lakh a day</p></div>
+    </div>
+
+    <h3 class="sub">Break-even: two fare options</h3>
+    <figure class="draw"><img src="img/break-even-two-options.png" alt="Chart of daily income against the ₹8.3 lakh daily operating cost: ₹15–30 meets cost at about 570 paid journeys per bus a day, ₹10–20 at about 850" loading="lazy"></figure>
+    <div class="tbl" style="margin-top:16px"><table>
+      <thead><tr><th>Demand at ₹10–20 fares, journeys per bus a day</th><th class="r">₹10–20: a year</th><th class="r">₹15–30: journeys</th><th class="r">₹15–30: a year</th></tr></thead>
+      <tbody>
+        <tr><td>Low: 600</td><td class="r">−₹8 crore</td><td class="r">480–510</td><td class="r">−₹3 to −₹4 crore</td></tr>
+        <tr><td>Expected: 850</td><td class="r">about break-even</td><td class="r">680–720</td><td class="r">+₹5 to +₹7 crore</td></tr>
+        <tr><td>Strong: 1,100</td><td class="r">+₹8 crore</td><td class="r">880–935</td><td class="r">+₹15 to +₹17 crore</td></tr>
+      </tbody>
+    </table></div>
+    <p class="note" style="margin-top:8px">66 buses in service, ₹8.3 lakh a day to run, ₹1 lakh a day from ads and station rents, 30% of journeys using two buses. ₹15–30 assumes 15–20% fewer journeys, from a typical city-bus fare elasticity of about −0.3 to −0.4. Indian city buses in mixed traffic carry roughly 650–800 passengers per bus per day.</p>
+  </div>
+</section>
+
+<section class="part" id="cost">
+  <div class="wrap">
+    <div class="head">
+      <p class="eyebrow">Costs</p>
+      <h2>Streets about ₹1,400 crore; whole programme about ₹1,600 crore</h2>
+      <p class="lead">Built from Hyderabad-level unit rates including GST, plus 4% traffic management and 15% design, supervision and contingency. More than half the cost of a bus road is below the surface: moving pipes and poles, covered drains, a shared duct bank, and overhead cables put underground — the scope of Bengaluru's TenderSURE streets, reportedly ₹10–20 crore per km.</p>
+    </div>
+    <div class="tbl"><table>
+      <thead><tr><th>Part of the network</th><th class="r">Road length</th><th class="r">₹ crore</th></tr></thead>
+      <tbody>
+        <tr><td>Loop roads L1, L2, L3: full rebuild, one-way bus lane</td><td class="r">~32 km</td><td class="r">580–800</td></tr>
+        <tr><td>Corridor roads C1, C2, C3: full rebuild, two-way bus lanes</td><td class="r">~21 km</td><td class="r">420–570</td></tr>
+        <tr><td>West feeder: walkways and painted lane</td><td class="r">~14 km</td><td class="r">40–70</td></tr>
+        <tr><td>Home-to-station routes: quick kit, busiest upgraded</td><td class="r">~60 km</td><td class="r">130–220</td></tr>
+        <tr class="total"><td>Total at 2026 rates (central ~₹1,390 cr)</td><td></td><td class="r">1,170–1,660</td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="grid g4" style="margin-top:24px">
+      <div class="card"><div class="num">₹21–23 cr</div><p>per km of bus road (loop ₹21, corridor ₹23), with drains and cable ducts</p></div>
+      <div class="card"><div class="num">₹11 / ₹19 cr</div><p>per km, standard / full walk-and-scoot edge, both sides</p></div>
+      <div class="card"><div class="num">₹2.2 / ₹4.2 cr</div><p>per km, one-way / two-way median bus lane</p></div>
+      <div class="card"><div class="num t">₹970 cr</div><p>cheaper option keeping existing drains</p></div>
+    </div>
+
+    <h3 class="sub">Transit capital: ₹115 crore, no buses to buy</h3>
+    <div class="tbl"><table>
+      <thead><tr><th>Item</th><th class="r">Quantity</th><th class="r">₹ crore</th></tr></thead>
+      <tbody>
+        <tr><td>Depots with overnight charging</td><td class="r">2</td><td class="r">40</td></tr>
+        <tr><td>Median stations: open platform, shade roof, arrival screens</td><td class="r">~90</td><td class="r">45</td></tr>
+        <tr><td>Fare system: validators, handheld readers, back office, app</td><td class="r">Network</td><td class="r">8</td></tr>
+        <tr><td>Fast chargers at route ends</td><td class="r">4</td><td class="r">6</td></tr>
+        <tr><td>Kerbside stops on the West feeder</td><td class="r">~20</td><td class="r">3</td></tr>
+        <tr><td>Control room and live tracking</td><td class="r">1</td><td class="r">3</td></tr>
+        <tr><td>Contingency, about 10%</td><td></td><td class="r">10</td></tr>
+        <tr class="total"><td>Total</td><td></td><td class="r">115</td></tr>
+      </tbody>
+    </table></div>
+    <p class="note" style="margin-top:12px">Buses come through the per-km operating contract. With 5–6% yearly price rises over a five-year build, streets come to about ₹1,500 crore; with transit capital, the programme is about ₹1,600 crore. Possible sources: state and GHMC capital budgets, PM e-Bus Sewa support for buses and charging (eligibility to confirm), depot land from TGIIC or HMDA, and station sponsorship by IT companies.</p>
+  </div>
+</section>
+
+<section class="part" id="rollout">
+  <div class="wrap">
+    <div class="head">
+      <p class="eyebrow">Rollout</p>
+      <h2>Start with two loops, then grow</h2>
+      <p class="lead">Phase 1 covers the densest office area — HITEC City, Gachibowli, Raidurg, Khajaguda and the Financial District. It opens with temporary kerbs and paint, then is built permanently. Phase 2 goes ahead only if Phase 1 proves demand.</p>
+    </div>
+    <div class="grid g4">
+      <div class="card phase now"><span class="when">2027</span><h3>Survey and design</h3><p>Road widths on every route, a ridership survey with IT employers, a market check with operators.</p></div>
+      <div class="card phase"><span class="when">2027–28</span><h3>Phase 1: L1 and L2</h3><p>24 km, 20 buses, about 35 stations, and the walk-and-scoot edge on the same roads. ~₹470 cr streets, opening with a ₹30 cr quick kit.</p></div>
+      <div class="card phase"><span class="when">2028–29</span><h3>Phase 2: C1, C2, C3, L3</h3><p>41 km and 40 buses, if Phase 1 carries 25,000 trips a day. Miyapur, Hafeezpet, KPHB, Chandanagar, Manikonda, Shaikpet.</p></div>
+      <div class="card phase"><span class="when">2030 onwards</span><h3>Phase 3: West feeder</h3><p>13 buses, and a Kokapet Neopolis loop as that area grows.</p></div>
+    </div>
+    <p class="note" style="margin-top:12px">Home-to-station routes open with each phase, around its stations: Kondapur, Kothaguda, Gachibowli, Raidurg and Khajaguda first.</p>
+  </div>
+</section>
+
+<section class="part" id="risks">
+  <div class="wrap">
+    <div class="head">
+      <p class="eyebrow">Risks</p>
+      <h2>What could go wrong, and the plan for it</h2>
+    </div>
+    <div class="tbl"><table>
+      <thead><tr><th>Risk</th><th>Response</th></tr></thead>
+      <tbody>
+        <tr><td>Cars and two-wheelers enter the bus lane</td><td>Car-trap pits at entries, bollards, AI number-plate cameras on poles and buses, automatic e-challans</td></tr>
+        <tr><td>Road narrower than needed</td><td>Pre-agreed fallback: drop a car lane, then kerbside bus lane, then shared lane with bus-first signal; walkway never cut</td></tr>
+        <tr><td>Metro pillars in the median</td><td>Bus lane between pillars where the gap allows, otherwise at the kerb</td></tr>
+        <tr><td>Low ridership in year one</td><td>Plan for −₹8 cr; trim off-peak km, 9 m buses, ₹15 corridor fare; Phase 2 only after 25,000 trips/day</td></tr>
+        <tr><td>Scooters cluttering walkways</td><td>Dock-only parking, GPS slow zones, two-hour clearing rule and fleet caps in operator permits</td></tr>
+        <tr><td>No legal category for standing e-scooters</td><td>Telangana Transport Department notifies one before any fleet launches</td></tr>
+        <tr><td>Fare evasion on open platforms</td><td>Roving inspectors with handheld readers, ₹500 penalty</td></tr>
+        <tr><td>Costs higher than estimated</td><td>Range of ₹1,170–1,660 cr carried; cheaper ₹970 cr option; costs confirmed by survey and tenders</td></tr>
+        <tr><td>Many agencies involved</td><td>One lead (HUMTA) with GHMC, HMDA, TGIIC, TGSRTC, HMRL and Cyberabad Traffic Police on a single programme board</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+</section>
+
+<section class="part ask" id="ask">
+  <div class="wrap">
+    <div class="head">
+      <p class="eyebrow">The ask</p>
+      <h2>Ten decisions to start in 2027</h2>
+      <p class="lead">Approve the model, set the rules that make it work, and fund and organise the first phase.</p>
+    </div>
+
+    <h3 class="sub" style="margin-top:0">Approve the model</h3>
+    <div class="grid g2">
+      <div class="card"><div class="num">1</div><p><b>The network:</b> spine, loops and tributaries, starting with Metro Loops L1 and L2, then corridors C1, C2, C3 and loop L3, with about 110 Metro Nodes.</p></div>
+      <div class="card"><div class="num">2</div><p><b>The street standard:</b> a walk-and-scoot edge on every bus road, and a home-to-station route within 3–5 km of every node.</p></div>
+      <div class="card"><div class="num">3</div><p><b>One Metro network, one card:</b> metro, loops and corridors under one brand and map, with a joint metro and bus pass that keeps a worker’s month under ₹3,000.</p></div>
+      <div class="card"><div class="num">4</div><p><b>The fare and contract:</b> choose ₹10–20 or ₹15–30 a bus ride, and approve a per-km contract for electric, driver-only buses.</p></div>
+    </div>
+
+    <h3 class="sub">Set the rules</h3>
+    <div class="grid g3">
+      <div class="card"><div class="num">5</div><p><b>Bus-only median lanes</b> enforced from day one, with car-trap pits, AI cameras and e-challans through Cyberabad Traffic Police.</p></div>
+      <div class="card"><div class="num">6</div><p><b>Autos on the branches:</b> zone permits, GPS tracking and dedicated parking at every node and neighbourhood, agreed with drivers’ unions.</p></div>
+      <div class="card"><div class="num">7</div><p><b>A legal e-scooter category,</b> notified by the Telangana Transport Department, with licensed shared-fleet operators and fleet caps.</p></div>
+    </div>
+
+    <h3 class="sub">Fund and organise</h3>
+    <div class="grid g3">
+      <div class="card"><div class="num">8</div><p><b>Fund Phase 1:</b> about ₹470 crore for streets, opening with a ₹30 crore quick kit, and ₹115 crore for depots, stations and the fare system. Seek PM e-Bus Sewa support and depot land from TGIIC or HMDA.</p></div>
+      <div class="card"><div class="num">9</div><p><b>One lead agency</b> with GHMC, HMDA, TGIIC, TGSRTC, HMRL and Cyberabad Traffic Police on one programme board.</p></div>
+      <div class="card"><div class="num">10</div><p><b>Start the 2027 work:</b> a road-width survey of every route, a ridership survey with IT employers and an operator market check. Phase 2 goes ahead once Phase 1 carries 25,000 trips a day.</p></div>
+    </div>
+    <p class="note" style="margin-top:16px">Whole programme about ₹1,600 crore over five years, including streets and transit capital. All figures are planning approximations.</p>
+  </div>
+</section>
+
+<section class="part" id="refs">
+  <div class="wrap">
+    <div class="head">
+      <p class="eyebrow">References</p>
+      <h2>Sources and inspiration</h2>
+    </div>
+    <ul class="tidy">
+      <li><a href="https://www.youtube.com/watch?v=MvQADLh5j24" target="_blank" rel="noopener">youtube.com/watch?v=MvQADLh5j24</a> — video (YouTube)</li>
+      <li><a href="https://www.headout.com/blog/dubai-public-transportation/" target="_blank" rel="noopener">headout.com/blog/dubai-public-transportation</a> — Dubai public transportation (Headout blog)</li>
+      <li><a href="https://openjicareport.jica.go.jp/pdf/11473048_02.pdf" target="_blank" rel="noopener">openjicareport.jica.go.jp/pdf/11473048_02.pdf</a> — JICA report (PDF)</li>
+      <li><a href="https://thetokyofilesurbandesign.wordpress.com/" target="_blank" rel="noopener">thetokyofilesurbandesign.wordpress.com</a> — The Tokyo Files: urban design (blog)</li>
+    </ul>
+    <p class="note" style="margin-top:16px">Road data for KBR Park, Dubai station positions and the bus routes are from OpenStreetMap.</p>
+  </div>
+</section>
+
+</main>
+
+<footer><div class="wrap">Cyberabad Scoot-to-Work · Proposal draft, November 2026 · <b>Uma Mahesh Padisetty</b> | <a href="mailto:uma.padisetty@hotmail.com">uma.padisetty@hotmail.com</a></div></footer>
+
+<script>
+(() => {
+  const nav = document.querySelector('nav.toc');
+  const strip = nav.querySelector('.wrap');
+  const links = [...nav.querySelectorAll('a')];
+  const map = new Map(links.map(a => [a.dataset.target, a]));
+
+  // Scroll in-page with JS so links work even when the page is hosted in a frame or has a <base> URL.
+  const go = id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const top = el.getBoundingClientRect().top + window.scrollY - nav.offsetHeight;
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    window.scrollTo({ top, behavior: reduce ? "instant" : "smooth" });
+    // Fallback: if smooth scrolling is blocked or stalls, land on the section anyway.
+    setTimeout(() => { if (Math.abs(window.scrollY - top) > 4) window.scrollTo({ top, behavior: "instant" }); }, 900);
+    if (history.replaceState) { try { history.replaceState(null, "", "#" + id); } catch (_) {} }
+  };
+  document.addEventListener('click', e => {
+    const a = e.target.closest('a[data-target]');
+    if (!a) return;
+    e.preventDefault();
+    if (map.has(a.dataset.target)) mark(map.get(a.dataset.target));
+    go(a.dataset.target);
+  });
+
+  // Highlight the section in view and keep its link visible in the strip (without scrolling the page).
+  const mark = a => {
+    links.forEach(l => l.classList.toggle('on', l === a));
+    const l = a.offsetLeft - strip.offsetLeft, r = l + a.offsetWidth;
+    if (l < strip.scrollLeft || r > strip.scrollLeft + strip.clientWidth) {
+      strip.scrollTo({ left: l - (strip.clientWidth - a.offsetWidth) / 2, behavior: 'smooth' });
+    }
+  };
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver(es => {
+      es.forEach(e => { if (e.isIntersecting && map.has(e.target.id)) mark(map.get(e.target.id)); });
+    }, { rootMargin: '-45% 0px -50% 0px' });
+    document.querySelectorAll('section.part').forEach(s => io.observe(s));
+  }
+})();
+</script>
+</body>
+</html>
