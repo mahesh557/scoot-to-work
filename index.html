@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Scoot-to-Work Light</title>
+<title>Cyberabad Scoot-to-Work</title>
 <meta name="color-scheme" content="light">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -21,10 +21,10 @@
   --green-soft: #DCEFE4;
   --terra: #B5532B;
   --terra-soft: #F6E3D9;
-  --hero: #EAF2EC;
-  --hero-ink: #14302A;
-  --hero-body: #3D4A45;
-  --hero-accent: #1F7A50;
+  --hero: #14302A;
+  --hero-ink: #F5F3EC;
+  --hero-body: #C9DDD3;
+  --hero-accent: #3FB57E;
   --img-bg: #FBFAF6;
   --gutter: max(16px, env(safe-area-inset-left), env(safe-area-inset-right));
 }
@@ -149,19 +149,47 @@ section.part.ask { background: var(--hero); border-bottom: 0; }
 
 footer { padding: 32px 0 calc(32px + env(safe-area-inset-bottom)); font-size: 14px; color: var(--muted); }
 @media (max-width: 560px) { body { font-size: 16px; } .card { padding: 18px; } th, td { padding: 8px 10px; } }
-/* light theme overrides */
+/* balanced theme: light sections, dark bands for the header, the idea, the ask and the footer */
 body { background: #FBFAF6; }
-.hero .shade { background: linear-gradient(90deg, rgba(251,250,246,.98) 0%, rgba(251,250,246,.92) 45%, rgba(251,250,246,.35) 100%); }
-.kpi { background: rgba(255,255,255,.75); border: 1px solid var(--line); box-shadow: 0 1px 2px rgba(27,38,34,.06); }
 nav.toc { background: color-mix(in srgb, #FFFFFF 92%, transparent); }
-nav.toc a.docs { background: var(--green); color: #FFFFFF; }
-nav.toc a.docs:hover, nav.toc a.docs.on { background: #17603F; color: #FFFFFF; }
 section.part.ask { background: var(--hero); }
-section.part.ask .card { background: #FFFFFF; border: 1px solid var(--line); }
-.ask .card .num { color: var(--green); }
-.ask p { color: var(--body); }
-.ask p b { color: var(--ink); }
-.ask a { color: var(--green); }
+section.part.ask .card { background: rgba(245,243,236,.07); border: 1px solid rgba(245,243,236,.14); }
+.ask .card .n { color: var(--hero-accent); }
+.ask .card h3 { color: var(--hero-ink); }
+footer { background: var(--hero); color: var(--hero-body); }
+footer b { color: var(--hero-ink); }
+footer a { color: var(--hero-accent); }
+
+/* compact layout: more content per screen on laptops */
+body { font-size: 15.5px; line-height: 1.55; }
+.wrap { max-width: 1280px; }
+section.part { padding: clamp(36px, 4.5vw, 56px) 0; }
+.head { margin-bottom: 20px; max-width: 920px; gap: 8px; }
+.head p.lead { font-size: 16.5px; }
+h2 { font-size: clamp(24px, 2.6vw, 32px); }
+h3 { font-size: 18px; }
+h4 { font-size: 16px; }
+.sub { margin: 32px 0 12px; }
+.grid { gap: 12px; }
+.card { padding: 16px 18px; gap: 6px; }
+.card .num { font-size: 28px; }
+.split { gap: 24px; }
+.stack > * + * { margin-top: 12px; }
+figure img { width: auto; max-width: 100%; max-height: 62vh; margin: 0 auto; object-fit: contain; }
+.ba figure img { width: 100%; max-height: 46vh; object-fit: cover; }
+figcaption { font-size: 13px; }
+table { font-size: 14.5px; }
+th, td { padding: 8px 12px; }
+.hero .inner { padding-top: clamp(40px, 6vw, 72px); padding-bottom: clamp(32px, 4vw, 52px); }
+.hero h1 { font-size: clamp(36px, 5vw, 60px); margin: 10px 0 14px; }
+.hero .lede { font-size: clamp(16px, 1.6vw, 19px); }
+.kpis { margin-top: 24px; }
+.kpi { padding: 10px 14px; }
+.kpi b { font-size: 22px; }
+.byline { margin-top: 18px; }
+nav.toc a { padding: 5px 11px; font-size: 13.5px; }
+.network-split figure img { max-height: 78vh; }
+.network-split .sub { margin-top: 0; }
 </style>
 </head>
 <body>
@@ -331,7 +359,7 @@ section.part.ask .card { background: #FFFFFF; border: 1px solid var(--line); }
   </div>
 </section>
 
-<section class="part" id="idea">
+<section class="part ask" id="idea">
   <div class="wrap">
     <div class="head">
       <p class="eyebrow">The idea</p>
@@ -354,11 +382,12 @@ section.part.ask .card { background: #FFFFFF; border: 1px solid var(--line); }
       <h2>Seven routes, each checked on the map</h2>
       <p class="lead">Every route was checked on OpenStreetMap. Where there is a separate road back, buses run one way round a loop and need only one median lane. Where there is only one main road, as from Miyapur, KPHB and Chandanagar, buses run both ways on a corridor. Loops that share a road run the same way along it, like meshed gears.</p>
     </div>
+    <div class="split network-split">
     <figure class="draw">
       <img src="img/network-map.png" alt="Map of the seven bus routes: loops L1, L2 and L3 in the south, corridors C1, C2 and C3 to the north and west, and the West feeder" loading="lazy">
       <figcaption>The network: loops L1, L2, L3; corridors C1, C2, C3; West feeder W.</figcaption>
     </figure>
-
+      <div>
     <h3 class="sub">Routes and fleet</h3>
     <div class="tbl"><table>
       <thead><tr><th>Route</th><th>Type</th><th>Serves</th><th class="r">Length</th><th class="r">Buses</th><th>Phase</th></tr></thead>
@@ -373,6 +402,8 @@ section.part.ask .card { background: #FFFFFF; border: 1px solid var(--line); }
         <tr class="total"><td colspan="3">Network</td><td class="r">~79 km</td><td class="r">73</td><td></td></tr>
       </tbody>
     </table></div>
+      </div>
+    </div>
 
     <h3 class="sub">Why loops: one lane fits an 80-ft road</h3>
     <div class="split">
